@@ -1,0 +1,4 @@
+import { BarChart3, GitCompareArrows, Sprout } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+const links = [{ to: '/', label: 'Dashboard', icon: BarChart3 }, { to: '/build', label: 'Scenario Builder', icon: Sprout }, { to: '/compare', label: 'Compare', icon: GitCompareArrows }];
+export default function Sidebar() { return <aside className="hidden w-64 shrink-0 border-r border-slate-200 bg-white p-4 md:block"><nav className="space-y-1" aria-label="Main navigation">{links.map(({ to, label, icon: Icon }) => <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${isActive ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-950'}`}><Icon size={18} />{label}</NavLink>)}</nav></aside>; }

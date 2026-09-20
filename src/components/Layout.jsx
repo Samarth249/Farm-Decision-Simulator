@@ -1,0 +1,3 @@
+import { Outlet } from 'react-router-dom';
+import Sidebar from './Sidebar';
+export default function Layout() { return <div className="min-h-screen bg-slate-50 text-slate-900"><header className="flex h-16 items-center border-b border-slate-200 bg-white px-5 md:px-8"><span className="text-xl font-bold tracking-tight text-emerald-700">AgriSim</span><span className="ml-3 border-l border-slate-200 pl-3 text-sm text-slate-500">Farm Scenario &amp; Decision Simulator</span></header><div className="flex min-h-[calc(100vh-4rem)]"><Sidebar /><main className="min-w-0 flex-1 p-5 md:p-8"><Outlet /></main></div></div>; }
