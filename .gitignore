@@ -1,24 +1,37 @@
-# Logs
-logs
-*.log
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+logs/
+*.log
 
-node_modules
-dist
-dist-ssr
-*.local
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Environment and DB files
+.env
+*.db
+*.sqlite3
+venv/
+.venv/
+env/
+
+# Pytest and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE and OS files
+.vscode/
+.idea/
+*.swp
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db

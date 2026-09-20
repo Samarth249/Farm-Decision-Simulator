@@ -1,0 +1,38 @@
+{
+  "sugarcane": {
+    "name": "Sugarcane",
+    "potential_yield_t_ha": 90.0,
+    "et_m_mm": 1200.0,
+    "ky": 1.2,
+    "growth_days": 365,
+    "default_price_per_tonne": 3100.0,
+    "source": "FAO Irrigation and Drainage Paper 33 (Yield response to water)"
+  },
+  "wheat": {
+    "name": "Wheat",
+    "potential_yield_t_ha": 5.5,
+    "et_m_mm": 450.0,
+    "ky": 1.15,
+    "growth_days": 120,
+    "default_price_per_tonne": 22750.0,
+    "source": "FAO Irrigation and Drainage Paper 33"
+  },
+  "maize": {
+    "name": "Maize",
+    "potential_yield_t_ha": 8.5,
+    "et_m_mm": 550.0,
+    "ky": 1.25,
+    "growth_days": 110,
+    "default_price_per_tonne": 20900.0,
+    "source": "FAO Irrigation and Drainage Paper 33"
+  },
+  "cotton": {
+    "name": "Cotton",
+    "potential_yield_t_ha": 3.8,
+    "et_m_mm": 700.0,
+    "ky": 0.85,
+    "growth_days": 160,
+    "default_price_per_tonne": 60000.0,
+    "source": "FAO Irrigation and Drainage Paper 33"
+  }
+}
