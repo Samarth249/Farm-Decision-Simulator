@@ -30,13 +30,8 @@ class FallbackEngine(SimulationEngine):
         crop_key_lower = crop_key.lower().strip()
         if crop_key_lower in self.crop_data:
             return self.crop_data[crop_key_lower]
-        # Default fallback parameters (Sugarcane standard defaults from FAO-33)
-        return {
-            "name": crop_key.capitalize(),
-            "potential_yield_t_ha": 90.0,
-            "et_m_mm": 1200.0,
-            "ky": 1.2
-        }
+        supported = ", ".join(list(self.crop_data.keys()))
+        raise ValueError(f"Unsupported crop '{crop_key}'. Supported crops are: {supported}")
 
     def simulate(self, scenario: ScenarioCreate) -> ScientificOutputs:
         crop_params = self._get_crop_params(scenario.crop)

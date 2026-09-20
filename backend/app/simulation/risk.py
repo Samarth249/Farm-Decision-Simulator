@@ -28,16 +28,23 @@ class RiskEngine:
         elif water_stress > 0.15:
             risk_factors.append(f"Moderate water stress ({round(water_stress * 100, 1)}% deficit)")
 
-        # 2. Rainfall Deficit Risk (Weight: 30%)
+        # 2. Residual Water Deficit Risk (Weight: 30%): residual water insufficiency post-irrigation
         # Explicit reference_rainfall = ETm (crop potential water requirement)
         reference_rainfall = scientific.water_output.crop_water_req_mm
         actual_rainfall = max(0.0, scenario.water.available)  # rainfall_mm
-        
+        effective_irrigation = scientific.water_output.irrigation_applied_mm
+        total_effective_water = actual_rainfall + effective_irrigation
+
         rain_deficit_ratio = max(0.0, 1.0 - (actual_rainfall / reference_rainfall if reference_rainfall > 0 else 1.0))
-        rainfall_risk_score = min(100.0, rain_deficit_ratio * 100.0)
+        unmet_ratio = max(0.0, 1.0 - (total_effective_water / reference_rainfall if reference_rainfall > 0 else 1.0))
+
+        # Residual water deficit risk score (measures residual water insufficiency post-irrigation)
+        residual_risk_score = min(100.0, rain_deficit_ratio * (0.3 + 0.7 * unmet_ratio) * 100.0)
         
-        if rain_deficit_ratio > 0.5:
-            risk_factors.append(f"High rainfall deficit (received {actual_rainfall}mm vs {reference_rainfall}mm requirement)")
+        if rain_deficit_ratio > 0.5 and unmet_ratio > 0.2:
+            risk_factors.append(f"Residual water deficit ({actual_rainfall}mm rainfall vs {reference_rainfall}mm crop requirement)")
+        elif rain_deficit_ratio > 0.5:
+            risk_factors.append("High irrigation reliance due to seasonal rainfall deficit")
 
         # 3. Cost Exposure Risk (Weight: 30%)
         cost_ratio = (economics.total_cost / economics.revenue) if economics.revenue > 0 else 1.0
@@ -50,7 +57,7 @@ class RiskEngine:
         # Composite score calculation (0-100 integer index)
         composite_score = int(round(
             0.40 * water_risk_score +
-            0.30 * rainfall_risk_score +
+            0.30 * residual_risk_score +
             0.30 * cost_risk_score
         ))
         composite_score = max(0, min(100, composite_score))

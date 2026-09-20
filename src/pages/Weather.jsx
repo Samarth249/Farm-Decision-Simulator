@@ -1,6 +1,6 @@
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-const data = [
+const climateData = [
   { month: 'Jun', temperature: 29, rainfall: 135 },
   { month: 'Jul', temperature: 27, rainfall: 210 },
   { month: 'Aug', temperature: 27, rainfall: 190 },
@@ -10,24 +10,29 @@ const data = [
 
 export default function Weather() {
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <span className="text-label-eyebrow font-bold text-primary tracking-wider uppercase">
+          <span className="text-xs font-extrabold text-emerald-700 tracking-wider uppercase">
             HYDROLOGY &amp; MICROCLIMATE
           </span>
-          <h1 className="text-headline-lg font-bold text-on-surface">Weather Conditions — Nanded, Maharashtra</h1>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
+            Weather Conditions — Nanded, Maharashtra
+          </h1>
+          <p className="text-sm text-slate-600 mt-1">
+            Historical baseline climate dataset (1991–2020) used for scenario simulation models.
+          </p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-container/50 px-3 py-1 text-xs font-semibold text-on-secondary-container">
-          <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-          Simulated Climate Dataset
+        <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3.5 py-1.5 text-xs font-semibold text-slate-700 border border-slate-200">
+          <span className="w-2 h-2 rounded-full bg-slate-500"></span>
+          Historical Baseline Dataset
         </span>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <ChartCard title="Temperature Trend (°C)">
-          <AreaChart data={data}>
-            <CartesianGrid stroke="#e5eeff" strokeDasharray="3 3" />
+          <AreaChart data={climateData}>
+            <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
             <XAxis dataKey="month" />
             <YAxis unit="°C" />
             <Tooltip />
@@ -36,12 +41,12 @@ export default function Weather() {
         </ChartCard>
 
         <ChartCard title="Rainfall Distribution (mm)">
-          <BarChart data={data}>
-            <CartesianGrid stroke="#e5eeff" strokeDasharray="3 3" />
+          <BarChart data={climateData}>
+            <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
             <XAxis dataKey="month" />
             <YAxis unit=" mm" />
             <Tooltip />
-            <Bar dataKey="rainfall" name="Rainfall (mm)" fill="#006948" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="rainfall" name="Rainfall (mm)" fill="#059669" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ChartCard>
       </div>
@@ -51,8 +56,8 @@ export default function Weather() {
 
 function ChartCard({ title, children }) {
   return (
-    <article className="h-80 rounded-xl border border-outline-variant/40 bg-surface-container-lowest p-5 shadow-sm">
-      <h2 className="font-semibold text-on-surface mb-3">{title}</h2>
+    <article className="h-80 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between">
+      <h2 className="font-bold text-slate-900 text-base mb-2">{title}</h2>
       <ResponsiveContainer width="100%" height="88%">
         {children}
       </ResponsiveContainer>

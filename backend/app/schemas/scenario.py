@@ -43,7 +43,7 @@ class ScenarioCreate(BaseModel):
     location: LocationSchema = Field(default_factory=LocationSchema)
     crop: str = Field(default="sugarcane", description="Target crop key (e.g. sugarcane, wheat, maize, cotton)")
     farm_area_ha: float = Field(default=1.011715, gt=0.0, description="Farm area in hectares (canonical internal unit)")
-    farm_area_acres: Optional[float] = Field(default=None, description="Farm area in acres (optional API input; converts to hectares)")
+    farm_area_acres: Optional[float] = Field(default=None, gt=0.0, description="Farm area in acres (optional API input; converts to hectares)")
     planting_date: str = Field(default="2026-06-15", pattern=r"^\d{4}-\d{2}-\d{2}$", description="Planting date in YYYY-MM-DD format")
     water: WaterSchema = Field(default_factory=WaterSchema)
     weather: WeatherSchema = Field(default_factory=WeatherSchema)
@@ -59,6 +59,12 @@ class ScenarioCreate(BaseModel):
             if acres is not None and acres > 0 and "farm_area_ha" not in data:
                 data["farm_area_ha"] = acres * ACRES_TO_HA
         return data
+
+    @model_validator(mode="after")
+    def validate_rainfed_water(self):
+        if self.water.method == "rainfed" and self.water.irrigation > 0:
+            raise ValueError("Irrigation depth must be 0 mm when irrigation method is set to 'rainfed'.")
+        return self
 
 class ScenarioResponse(ScenarioCreate):
     id: str

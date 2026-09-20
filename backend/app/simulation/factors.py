@@ -64,7 +64,7 @@ class FactorAttributionEngine:
                     impact=0.0,
                     metric="yield",
                     direction="neutral",
-                    contribution_pct=100.0
+                    contribution_pct=0.0
                 )
             ]
 
@@ -96,17 +96,32 @@ class FactorAttributionEngine:
 
             # Run single-variable perturbation simulation
             perturbed_result = self.sim_service.run_simulation(perturbed_scenario)
+
+            # Measure yield impact & financial cost impact
             part_yield_delta = perturbed_result.yield_data.estimated_t_ha - base_result.yield_data.estimated_t_ha
+            part_cost_delta = perturbed_result.economics_data.total_cost - base_result.economics_data.total_cost
 
-            abs_impact = abs(part_yield_delta)
+            if abs(part_yield_delta) > 1e-4:
+                metric = "yield"
+                impact = part_yield_delta
+                abs_impact = abs(part_yield_delta)
+            elif abs(part_cost_delta) > 1.0:
+                metric = "cost"
+                impact = part_cost_delta
+                # Scale financial cost impact to equivalent attribution weight
+                abs_impact = abs(part_cost_delta) / 1000.0
+            else:
+                metric = "model"
+                impact = 0.0
+                abs_impact = 0.0
+
             sum_abs_impacts += abs_impact
-
-            direction = "positive" if part_yield_delta > 0 else ("negative" if part_yield_delta < 0 else "neutral")
+            direction = "positive" if impact > 0 else ("negative" if impact < 0 else "neutral")
 
             variable_impacts.append({
                 "factor": var_label,
-                "impact": round(part_yield_delta, 2),
-                "metric": "yield",
+                "impact": round(impact, 2),
+                "metric": metric,
                 "direction": direction,
                 "abs_impact": abs_impact
             })
@@ -116,7 +131,8 @@ class FactorAttributionEngine:
             if sum_abs_impacts > 1e-4:
                 pct = round((item["abs_impact"] / sum_abs_impacts) * 100.0, 1)
             else:
-                pct = round(100.0 / len(variable_impacts), 1)
+                # If no variable produced a measurable output delta, set contribution to 0.0%
+                pct = 0.0
 
             contributions.append(
                 FactorContribution(

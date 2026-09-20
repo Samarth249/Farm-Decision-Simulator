@@ -15,6 +15,11 @@ def run_simulation(scenario: ScenarioCreate):
         service = SimulationService()
         result = service.run_simulation(scenario)
         return result
+    except ValueError as ve:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(ve)
+        )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

@@ -8,14 +8,15 @@ class CostEngine:
     """Transparent economic cost and revenue calculator."""
 
     def calculate(self, scenario: ScenarioCreate, scientific: ScientificOutputs) -> EconomicsOutput:
-        # Inputs cost total
-        inputs_cost = (
+        # Per-hectare input costs scaled by total farm area (ha)
+        inputs_cost_per_ha = (
             scenario.inputs.seed_cost
             + scenario.inputs.fertilizer_cost
             + scenario.inputs.machinery_cost
             + scenario.inputs.other_cost
         )
-        labor_cost = scenario.inputs.labor_cost
+        inputs_cost = inputs_cost_per_ha * scenario.farm_area_ha
+        labor_cost = scenario.inputs.labor_cost * scenario.farm_area_ha
 
         # Irrigation operating cost based on effective water applied
         irrigation_cost = (

@@ -41,15 +41,15 @@ def test_2_aquacrop_engine_execution():
     print(f"\nTEST 2 PASSED: AquaCropEngine executed successfully (Engine Used: {res.engine_used}).")
 
 def test_3_aquacrop_fallback_on_invalid_inputs():
-    """TEST 3: AquaCrop invalid input triggers FallbackEngine cleanly."""
+    """TEST 3: AquaCrop execution failure triggers FallbackEngine cleanly."""
     service = SimulationService(engine=AquaCropEngine())
-    # Provide an invalid crop name to force AquaCrop failure and test graceful fallback
-    sc = ScenarioCreate(crop="non_existent_crop_xyz")
+    # Provide an out-of-range date to force AquaCrop model error and test graceful fallback
+    sc = ScenarioCreate(crop="sugarcane", planting_date="2099-06-15")
     res = service.run_simulation(sc)
 
     assert res.yield_data.estimated_t_ha > 0
     assert res.engine_used == "fallback"
-    print("\nTEST 3 PASSED: Invalid inputs gracefully handled by FallbackEngine.")
+    print("\nTEST 3 PASSED: Out-of-range inputs gracefully handled by FallbackEngine.")
 
 def test_4_factor_attribution_water():
     """TEST 4: Scenario A vs Scenario B (Water modification) identifies Water as dominant factor."""

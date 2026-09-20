@@ -2,6 +2,7 @@ from app.schemas.scenario import ScenarioCreate
 from app.schemas.simulation import SimulationResult
 from app.simulation.engine import SimulationEngine
 from app.simulation.fallback_engine import FallbackEngine
+from app.simulation.aquacrop_engine import AquaCropEngine
 from app.simulation.cost import CostEngine
 from app.simulation.risk import RiskEngine
 
@@ -9,7 +10,7 @@ class SimulationService:
     """Unified service orchestrating scientific simulation, economics calculation, and risk scoring."""
 
     def __init__(self, engine: SimulationEngine = None):
-        self.engine = engine or FallbackEngine()
+        self.engine = engine or AquaCropEngine(fallback=FallbackEngine())
         self.cost_engine = CostEngine()
         self.risk_engine = RiskEngine()
 
