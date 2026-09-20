@@ -9,12 +9,24 @@ class LocationSchema(BaseModel):
     lon: float = Field(default=77.32, ge=-180.0, le=180.0, description="Longitude")
 
 class WaterSchema(BaseModel):
-    available: float = Field(default=500.0, ge=0.0, description="Total seasonal rainfall water available (mm)")
-    irrigation: float = Field(default=350.0, ge=0.0, description="Planned irrigation water allocation (mm)")
-    method: Literal["drip", "flood", "sprinkler", "rainfed"] = Field(default="drip", description="Irrigation application method")
+    available: float = Field(
+        default=500.0, ge=0.0,
+        description="Seasonal rainfall / precipitation received during scenario (rainfall_mm)"
+    )
+    irrigation: float = Field(
+        default=350.0, ge=0.0,
+        description="Planned irrigation water supplied (irrigation_mm)"
+    )
+    method: Literal["drip", "flood", "sprinkler", "rainfed"] = Field(
+        default="drip",
+        description="Irrigation application method (drip=90% eff, sprinkler=75% eff, flood=60% eff, rainfed=100% eff)"
+    )
 
 class WeatherSchema(BaseModel):
-    source: Literal["historical", "forecast", "custom"] = Field(default="historical", description="Weather data source")
+    source: Literal["historical", "forecast", "custom"] = Field(
+        default="historical",
+        description="Weather data source"
+    )
 
 class InputsSchema(BaseModel):
     seed_cost: float = Field(default=10000.0, ge=0.0, description="Seed/planting material cost (₹)")
