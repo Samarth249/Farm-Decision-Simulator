@@ -29,6 +29,7 @@ export default function CompareScenarios() {
       }).catch((err) => {
         if (isMounted) {
           setCompareError(`Comparison failed: ${err.message}`);
+          setBackendComparison(null);
           setLoading(false);
         }
       });

@@ -50,7 +50,8 @@ export default function ScenarioBuilder() {
         }
       } catch (err) {
         if (isMounted && err.name !== 'AbortError') {
-          setError('Simulation unavailable. Please check backend connection.');
+          setError(err.message || 'Simulation unavailable. Please check backend connection.');
+          setResult(null);
           setLoading(false);
         }
       }
