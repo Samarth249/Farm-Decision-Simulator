@@ -1,4 +1,27 @@
-export default function KPICard({ label, value, detail, tone = 'emerald' }) {
-  const tones = { emerald: 'bg-emerald-50 text-emerald-700', blue: 'bg-blue-50 text-blue-700', amber: 'bg-amber-50 text-amber-700', rose: 'bg-rose-50 text-rose-700' };
-  return <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><p className="text-sm font-medium text-slate-500">{label}</p><p className="mt-2 text-2xl font-bold tracking-tight text-slate-950">{value}</p>{detail && <p className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${tones[tone]}`}>{detail}</p>}</article>;
+export default function KPICard({ label, value, detail, tone = 'emerald', icon = 'eco' }) {
+  const iconColors = {
+    emerald: 'text-primary',
+    blue: 'text-secondary',
+    amber: 'text-outline',
+    rose: 'text-primary'
+  };
+
+  return (
+    <div className="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 shadow-sm relative overflow-hidden">
+      <div className="flex items-center justify-between">
+        <span className="text-label-md text-on-surface-variant">{label}</span>
+        <span className={`material-symbols-outlined ${iconColors[tone] || 'text-primary'} text-[18px]`}>
+          {icon}
+        </span>
+      </div>
+      <div className="text-title-kpi text-on-surface mt-2 font-bold">{value}</div>
+      <div className="mt-2.5 flex items-center gap-1.5">
+        {detail && (
+          <span className="inline-flex items-center text-label-xs font-semibold px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container">
+            {detail}
+          </span>
+        )}
+      </div>
+    </div>
+  );
 }
