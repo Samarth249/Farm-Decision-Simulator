@@ -306,13 +306,11 @@ export async function compareScenariosApi(baselineScenario, alternativeScenarios
       risk_score: baseRes.risk
     },
     comparisons: altComparisons,
-    explanation: {
-      summary: `Comparing scenarios against baseline '${baselineScenario.name}'.`,
-      key_differences: altComparisons.map(c => `'${c.scenario_name}' yield delta: ${c.yield.delta_from_baseline_t_ha} t/ha, profit delta: INR ${c.economics.delta_profit_from_baseline.toLocaleString()}`)
-    },
+    explanation: `Comparing scenarios against baseline '${baselineScenario.name}'.`,
+    key_differences: altComparisons.map(c => `'${c.scenario_name}' yield delta: ${c.yield.delta_from_baseline_t_ha} t/ha, profit delta: INR ${c.economics.delta_profit_from_baseline.toLocaleString('en-IN')}`),
     dominant_factors: [
-      { factor: 'Water Availability', weight_pct: 55 },
-      { factor: 'Irrigation Allocation', weight_pct: 45 }
+      { factor: 'Water Availability', contribution_pct: 55 },
+      { factor: 'Irrigation Allocation', contribution_pct: 45 }
     ]
   };
 }

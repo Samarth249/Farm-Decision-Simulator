@@ -90,9 +90,17 @@ export default function CompareScenarios() {
     return `${sign}${diff.toFixed(1)} ${unit}`;
   };
 
-  const dominantFactors = backendComparison?.dominant_factors || [];
-  const keyDifferences = backendComparison?.key_differences || [];
-  const explanationText = backendComparison?.explanation || null;
+  const dominantFactors = Array.isArray(backendComparison?.dominant_factors) ? backendComparison.dominant_factors : [];
+  const keyDifferences = Array.isArray(backendComparison?.key_differences)
+    ? backendComparison.key_differences
+    : (Array.isArray(backendComparison?.explanation?.key_differences) ? backendComparison.explanation.key_differences : []);
+
+  let explanationText = null;
+  if (typeof backendComparison?.explanation === 'string') {
+    explanationText = backendComparison.explanation;
+  } else if (backendComparison?.explanation && typeof backendComparison.explanation === 'object') {
+    explanationText = backendComparison.explanation.summary || (Array.isArray(backendComparison.explanation.key_differences) ? backendComparison.explanation.key_differences.join(' ') : null);
+  }
 
   return (
     <div className="space-y-8">
