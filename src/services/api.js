@@ -59,6 +59,13 @@ export function mapBackendResultToUI(data) {
   const profit = data.economics_data?.profit ?? 0;
   const roi = data.economics_data?.roi_percentage ?? 0;
 
+  let explanationText = null;
+  if (typeof data.explanation === 'string') {
+    explanationText = data.explanation;
+  } else if (data.explanation && typeof data.explanation === 'object') {
+    explanationText = data.explanation.narrative || (Array.isArray(data.explanation.takeaways) ? data.explanation.takeaways.join(' ') : null);
+  }
+
   return {
     yield: yieldVal,
     water: waterVal,
@@ -73,7 +80,7 @@ export function mapBackendResultToUI(data) {
     risk: data.risk_data?.score ?? 0,
     riskLevel: data.risk_data?.level ?? 'Low',
     riskFactors: data.risk_data?.factors || [],
-    explanation: data.explanation || null,
+    explanation: explanationText,
     engineUsed: data.engine_used || 'fallback',
     raw: data
   };
@@ -113,14 +120,7 @@ function computeClientFallbackSimulation(inputs) {
     risk: risk,
     riskLevel: risk < 35 ? 'Low' : risk < 65 ? 'Medium' : 'High',
     riskFactors: ['Water stress impact based on total seasonal moisture'],
-    explanation: {
-      narrative: `Estimated yield for Sugarcane is ${yieldVal} t/ha with net profit of INR ${profit.toLocaleString()}. Risk score is ${risk} (${risk < 35 ? 'Low' : 'Medium'}).`,
-      takeaways: [
-        `Water availability (${totalWater} mm) meets approximately ${Math.round((totalWater/850)*100)}% of seasonal demand.`,
-        `Net ROI is projected at ${roi}% with total production cost of INR ${totalCost.toLocaleString()}.`
-      ],
-      not_modeled: []
-    },
+    explanation: `Estimated yield for Sugarcane is ${yieldVal} t/ha with net profit of INR ${profit.toLocaleString('en-IN')}. Risk score is ${risk} (${risk < 35 ? 'Low' : 'Medium'}).`,
     engineUsed: 'fallback (client fallback)',
     raw: null
   };

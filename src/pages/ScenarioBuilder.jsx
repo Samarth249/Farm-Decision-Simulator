@@ -583,8 +583,10 @@ export default function ScenarioBuilder() {
                     </div>
                     <h4 className="text-base font-bold text-slate-900">Scenario Reasoning &amp; Impact</h4>
                     <p className="text-xs text-slate-700 mt-2 leading-relaxed font-medium">
-                      {result.explanation ? (
+                      {typeof result.explanation === 'string' ? (
                         result.explanation
+                      ) : result.explanation && typeof result.explanation === 'object' ? (
+                        result.explanation.narrative || (Array.isArray(result.explanation.takeaways) ? result.explanation.takeaways.join(' ') : '')
                       ) : (
                         <span className="text-slate-600">
                           Modeled via FAO-33 water-stress equations. Save this scenario and compare it with an alternative scenario to view detailed factor sensitivity and narrative comparisons.
