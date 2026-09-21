@@ -5,7 +5,21 @@ import { runSimulation } from '../services/api';
 import KPICard from '../components/KPICard';
 
 const locations = ['Nanded, Maharashtra', 'Nashik, Maharashtra', 'Kolhapur, Maharashtra', 'Belagavi, Karnataka', 'Solapur, Maharashtra'];
-const cropsList = ['Sugarcane (Co 86032)', 'Cotton (Bt hybrid)', 'Maize (HQPM 1)', 'Wheat (HD 2967)'];
+const cropsList = [
+  'Sugarcane (Co 86032)',
+  'Wheat (HD 2967)',
+  'Soybean (JS 335)',
+  'Maize (HQPM 1)',
+  'Cotton (Bt hybrid)'
+];
+
+const CROP_DEFAULTS = {
+  sugarcane: { water: 350, rainfall: 500, price: 3100 },
+  wheat: { water: 200, rainfall: 200, price: 22750 },
+  soybean: { water: 100, rainfall: 450, price: 48920 },
+  maize: { water: 150, rainfall: 350, price: 20900 },
+  cotton: { water: 250, rainfall: 400, price: 60000 }
+};
 
 const initialInputs = {
   location: 'Nanded, Maharashtra',
@@ -67,7 +81,14 @@ export default function ScenarioBuilder() {
   const change = (key, value) => {
     setInputs((state) => {
       const nextState = { ...state, [key]: value };
-      if (key === 'irrigation' && value.toLowerCase() === 'rainfed') {
+      if (key === 'crop') {
+        const cropKey = value.split(' ')[0].toLowerCase();
+        if (CROP_DEFAULTS[cropKey]) {
+          nextState.water = CROP_DEFAULTS[cropKey].water;
+          nextState.rainfall = CROP_DEFAULTS[cropKey].rainfall;
+          nextState.price = CROP_DEFAULTS[cropKey].price;
+        }
+      } else if (key === 'irrigation' && value.toLowerCase() === 'rainfed') {
         nextState.water = 0;
       } else if (key === 'irrigation' && state.irrigation.toLowerCase() === 'rainfed' && value.toLowerCase() !== 'rainfed') {
         nextState.water = 350;
@@ -109,7 +130,7 @@ export default function ScenarioBuilder() {
         {result?.engineUsed && (
           <div className="flex items-center gap-3">
             <div
-              title="Simulation engine reporting"
+              title="Simulation engine status"
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-semibold ${
                 result.engineUsed.toLowerCase() === 'aquacrop'
                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
@@ -553,7 +574,7 @@ export default function ScenarioBuilder() {
                   </div>
                 </div>
 
-                {/* Reasoning & Actions Card */}
+                {/* Reasoning & Model Scope Card */}
                 <div className="lg:col-span-6 bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
                   <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold mb-3 border border-emerald-200">
@@ -570,9 +591,22 @@ export default function ScenarioBuilder() {
                         </span>
                       )}
                     </p>
+
+                    {/* Compact Simulation Model Scope */}
+                    <div className="mt-4 bg-white border border-slate-200 rounded-xl p-3.5 text-xs text-slate-600 space-y-1">
+                      <div className="font-bold text-slate-800 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[15px] text-emerald-600">info</span>
+                        <span>Simulation Model Scope</span>
+                      </div>
+                      <p className="text-[11px] leading-relaxed">
+                        AgriSim models scenario outcomes using crop parameters, water availability, and economic inputs.
+                        Yield is estimated via the active engine ({result.engineUsed === 'aquacrop' ? 'AquaCrop-OSPy' : 'FAO-33 water-stress equations'}).
+                        Variables not represented by the active engine (such as planting date shifts or labor intensity on yield) are explicitly marked as <strong>Not modeled</strong>.
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="mt-6">
+                  <div className="mt-5">
                     <button
                       onClick={handleSave}
                       className="w-full py-3 px-4 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors shadow-sm cursor-pointer"

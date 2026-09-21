@@ -25,12 +25,26 @@ def test_unknown_crop_returns_400():
 
 def test_frontend_crops_match_backend():
     """Adversarial Test 2: All selectable frontend crops exist in backend crops.json."""
-    frontend_crops = ["sugarcane", "cotton", "maize", "wheat"]
+    frontend_crops = ["sugarcane", "cotton", "maize", "wheat", "soybean"]
     engine = FallbackEngine()
     for crop in frontend_crops:
         params = engine._get_crop_params(crop)
         assert params["potential_yield_t_ha"] > 0
         assert params["et_m_mm"] > 0
+
+def test_crop_specific_potential_yield_targets():
+    """Verify that potential yield targets differ between crops (Sugarcane != Wheat != Soybean)."""
+    engine = FallbackEngine()
+    sugarcane_params = engine._get_crop_params("sugarcane")
+    wheat_params = engine._get_crop_params("wheat")
+    soybean_params = engine._get_crop_params("soybean")
+
+    assert sugarcane_params["potential_yield_t_ha"] == 90.0
+    assert wheat_params["potential_yield_t_ha"] == 5.5
+    assert soybean_params["potential_yield_t_ha"] == 3.5
+
+    assert sugarcane_params["potential_yield_t_ha"] != wheat_params["potential_yield_t_ha"]
+    assert wheat_params["potential_yield_t_ha"] != soybean_params["potential_yield_t_ha"]
 
 def test_rainfed_cannot_receive_irrigation():
     """Adversarial Test 3: Rainfed method with irrigation > 0 must fail API validation (HTTP 422)."""

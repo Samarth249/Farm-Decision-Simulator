@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/((?!assets/|favicon.svg|icons.svg|api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

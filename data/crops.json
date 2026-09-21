@@ -17,6 +17,15 @@
     "default_price_per_tonne": 22750.0,
     "source": "FAO Irrigation and Drainage Paper 33"
   },
+  "soybean": {
+    "name": "Soybean",
+    "potential_yield_t_ha": 3.5,
+    "et_m_mm": 500.0,
+    "ky": 0.85,
+    "growth_days": 105,
+    "default_price_per_tonne": 48920.0,
+    "source": "FAO Irrigation and Drainage Paper 33"
+  },
   "maize": {
     "name": "Maize",
     "potential_yield_t_ha": 8.5,
